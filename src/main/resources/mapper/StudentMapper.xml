@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.pc.rbac_system.mapper.StudentMapper">
+
+    <select id="findStudentsByTeamId" resultType="com.pc.rbac_system.model.Student" parameterType="long">
+        select * from wx_student where team_id = #{teamId}
+    </select>
+
+    <select id="findNoTeamStudents" resultType="com.pc.rbac_system.model.Student">
+        select * from wx_student where team_id is null
+    </select>
+
+    <select id="findStudentById" resultType="com.pc.rbac_system.model.Student" parameterType="long">
+        select * from wx_student where id = #{id}
+    </select>
+
+    <update id="updateStudent" parameterType="com.pc.rbac_system.model.Student">
+        update wx_student
+        <set>
+            student_name = #{studentName},
+            student_class_num = #{studentClassNum},
+            location = #{location}
+        </set>
+    </update>
+
+    <insert id="addStudent">
+        insert into wx_student (user_id,student_name,student_class_num,create_time,team_id,location) values
+        (#{userId},#{studentName},#{studentClassNum},#{createTime},#{teamId},#{location})
+    </insert>
+
+    <update id="changeStudentTeam">
+        update wx_student
+        <set>
+            team_id = #{teamId}
+        </set>
+        where  id = #{stuId}
+    </update>
+
+    <select id="findAllStudentId" resultType="com.pc.rbac_system.model.Student">
+        select id from wx_student;
+    </select>
+</mapper>
