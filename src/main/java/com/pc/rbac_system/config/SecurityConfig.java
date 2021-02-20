@@ -46,13 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 })
-                .and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/common/**","/login","/register","/css/**","/js/**","/font/**").permitAll().anyRequest().authenticated()
+                .and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/common/**","/login","/register","/css/**","/js/**","/font/**", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll().anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().userDetailsService(userDetailsService).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;
 
-        http.exceptionHandling()
-                //设置权限认证错误handler，权限认证错误后续处理
+        http.exceptionHandling()                //设置权限认证错误handler，权限认证错误后续处理
                 .accessDeniedHandler((req,resp,var3)->{
                     resp.setContentType("application/json;charset=utf-8");
                     resp.getWriter().write(JSON.toJSONString(Result.error(CodeMsg.USER_PERMISSION_ERROR)));
