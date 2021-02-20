@@ -85,6 +85,7 @@ public class UserServiceImpl implements IUserService {
             map.put("token",s);
             map.put("tokenHead",tokenHead);
             map.put("username",userByUsername.getUsername());
+            map.put("id",userByUsername.getId());
 
             return Result.tokenSuccess(map);
         }else {
@@ -214,5 +215,10 @@ public class UserServiceImpl implements IUserService {
     public Result findusersByRole(String roleName) {
         List<User> users = userMapper.findusersByRole(roleName);
         return Result.success(users);
+    }
+
+    @Override
+    public List<User> findAllByRoleName(String roleName) {
+        return userMapper.findAllByRoleName(roleName);
     }
 }

@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors()
-                .configurationSource(request->{
+                .configurationSource(request->{             // 跨域问题 springboot 2.x后 origin 需要设置 setAllowedOriginPatterns 而不是 setAllowedOrigin
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOriginPatterns(Collections.singletonList("*"));
                     //2,允许任何请求头

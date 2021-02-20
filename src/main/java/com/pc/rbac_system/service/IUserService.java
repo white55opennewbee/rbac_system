@@ -37,4 +37,6 @@ public interface IUserService {
     Boolean updateUserRoles(UserAndRoleParam param);
 
     Result findusersByRole(String roleName);
+
+    List<User> findAllByRoleName(String roleName);
 }

@@ -83,4 +83,9 @@
     <select id="findusersByRole" resultType="com.pc.rbac_system.model.User">
         select * from wx_user where id in (select admin_id from wx_user_role_relation where role_id = (select id from wx_role where name = #{roleName}))
     </select>
+
+    <select id="findAllByRoleName" resultType="com.pc.rbac_system.model.User" parameterType="string">
+        select * from wx_user where id in (select admin_id from wx_user_role_relation where role_id in (select id form wx_role where name = #{name}))
+
+    </select>
 </mapper>

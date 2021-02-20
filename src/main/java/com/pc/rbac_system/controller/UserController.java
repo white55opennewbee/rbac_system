@@ -135,7 +135,6 @@ public class UserController {
 
     @ApiOperation("根据用户id查找用户以及用户角色")
     @GetMapping("/findUserByUserId/{id}")
-    @PreAuthorize("hasAuthority('wx:user:read')")
     public Result findUserByUserId(@PathVariable Long id) {
         HashMap map = new HashMap();
         User user = userService.findUserByUserId(id);
@@ -162,5 +161,10 @@ public class UserController {
         return Result.error(CodeMsg.SERVER_ERROR);
     }
 
+    @ApiOperation("根据角色名称查询用户")
+    @GetMapping("/findAllByRoleName/{roleName}")
+    public Result findAllByRoleName(@PathVariable("roleName") String roleName){
+        return Result.success(userService.findAllByRoleName(roleName));
+    }
 
 }

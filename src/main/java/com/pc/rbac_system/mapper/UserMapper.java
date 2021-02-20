@@ -32,4 +32,6 @@ public interface UserMapper {
     Integer deleteUserRoles(Long userId);
 
     List<User> findusersByRole(String roleName);
+
+    List<User> findAllByRoleName(String name);
 }
