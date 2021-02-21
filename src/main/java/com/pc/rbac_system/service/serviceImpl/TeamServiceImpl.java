@@ -21,7 +21,7 @@ public class TeamServiceImpl implements ITeamService {
 
     @Override
     public Result findAllTeam(Integer currentPage, Integer maxSize,Long teacherId) {
-        PageHelper.startPage(currentPage,maxSize);
+        PageHelper.startPage(currentPage,maxSize,true,null,true);
         List<Team> list = teamMapper.findAllTeamByTeacherId(teacherId);
         PageInfo info = new PageInfo(list);
         return Result.success(info);

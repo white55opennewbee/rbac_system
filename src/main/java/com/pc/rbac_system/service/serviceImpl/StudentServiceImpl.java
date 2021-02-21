@@ -29,7 +29,7 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public Result findStudentsByTeamId(Long teamId,Integer currentPage,Integer maxSize) {
-        PageHelper.startPage(currentPage,maxSize);
+        PageHelper.startPage(currentPage,maxSize,true,null,true);
         List<Student> studentList = studentMapper.findStudentsByTeamId(teamId);
         PageInfo info = new PageInfo(studentList);
         return Result.success(info);
@@ -83,5 +83,13 @@ public class StudentServiceImpl implements IStudentService {
     public List<Student> findAllStudentId() {
        List<Student> longs =  studentMapper.findAllStudentId();
        return longs;
+    }
+
+    @Override
+    public Boolean setStudentNoTeam(Long studentId) {
+        Long teamId = studentMapper.findTeamIdByStudentId(studentId);
+        Integer effect = studentMapper.setStudentNoTeam(studentId);
+        teamMapper.updateTeamCounts(teamId);
+        return effect>0;
     }
 }

@@ -39,4 +39,12 @@
     <select id="findAllStudentId" resultType="com.pc.rbac_system.model.Student">
         select id from wx_student;
     </select>
+
+    <update id="setStudentNoTeam" parameterType="long">
+        update wx_student set team_id = null where id = #{studentId}
+    </update>
+
+    <select id="findTeamIdByStudentId" resultType="java.lang.Long">
+        select team_id from  wx_student where id = #{studentId}
+    </select>
 </mapper>

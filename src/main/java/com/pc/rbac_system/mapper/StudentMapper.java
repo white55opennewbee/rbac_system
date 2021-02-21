@@ -19,4 +19,8 @@ public interface StudentMapper {
     Integer changeStudentTeam(@Param("stuId") Long stuId,@Param("teamId") Long teamId);
 
     List<Student> findAllStudentId();
+
+    Integer setStudentNoTeam(Long studentId);
+
+    Long findTeamIdByStudentId(Long studentId);
 }

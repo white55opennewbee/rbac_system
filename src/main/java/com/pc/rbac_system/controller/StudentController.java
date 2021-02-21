@@ -41,4 +41,11 @@ public class StudentController {
        return studentService.updateStudent(student);
     }
 
+    @PutMapping("/setStudentNoTeam/{studentId}")
+    public Result setStudentNoTeam(@PathVariable Long studentId){
+       Boolean success =  studentService.setStudentNoTeam(studentId);
+       return Result.success(success);
+    }
+
+
 }

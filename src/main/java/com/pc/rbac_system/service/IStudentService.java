@@ -19,4 +19,6 @@ public interface IStudentService {
     Result changeStudentTeam(Long stuId,Long teamId);
 
     List<Student> findAllStudentId();
+
+    Boolean setStudentNoTeam(Long studentId);
 }
