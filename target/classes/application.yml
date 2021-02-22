@@ -1,0 +1,48 @@
+server:
+  port: 8088
+
+spring:
+  redis:
+    port: 6379
+    username:
+    password:
+    host: 123.57.245.81
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: pc13320643636...
+    url: jdbc:mysql://123.57.245.81:3306/wanxi_study_step2?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    hikari:
+      connection-test-query: select 1
+      connection-timeout: 60000
+      idle-timeout: 500000
+      minimum-idle: 10
+      maximum-pool-size: 20
+      connection-init-sql: select 1
+      initialization-fail-timeout: 1
+  application:
+    name: rbacService
+jwt:
+  #定义我们的盐  密码
+  secret: white55open
+  #过期时间
+  expiration: 1800
+  #token 的类型 说明他以 bearer 开头
+  tokenHead: bearer
+  #token 对应的 key
+  tokenHeader: Authorization
+
+esHost: 123.57.245.81
+esPort: 9200
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.pc.rbac_system.model
+
+#//开启sql日志打印
+logging:
+  level:
+    com.pc.rbac_system.mapper: debug

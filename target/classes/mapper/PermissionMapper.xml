@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.pc.rbac_system.mapper.PermissionMapper">
+    <select id="findPermissionsByUserId" resultType="com.pc.rbac_system.model.Permission">
+        select * from wx_permission where id in
+        (select permission_id from wx_role_permission_relation where role_id in
+        (select id from wx_role where id in
+        (
+        select role_id from wx_user_role_relation where admin_id = #{userId}
+        )
+        )
+        )
+    </select>
+
+    <select id="findPermissionsByRoleId" resultType="com.pc.rbac_system.model.Permission" parameterType="long">
+        select wx_permission.* from wx_permission left join wx_role_permission_relation on
+        wx_role_permission_relation.permission_id = wx_permission.id
+        where wx_role_permission_relation.role_id = #{roleId}
+
+    </select>
+
+    <select id="findAllPermissions" resultType="com.pc.rbac_system.model.Permission">
+        select * from wx_permission;
+    </select>
+
+    <delete id="deletePermissionByRole" parameterType="com.pc.rbac_system.model.Role">
+        delete from wx_role_permission_relation where role_id = #{id}
+    </delete>
+
+    <insert id="insertPermissionsByRole" parameterType="com.pc.rbac_system.model.Role">
+        insert into wx_role_permission_relation (role_id,permission_id) values
+        <foreach collection="permissions" item="item" separator=",">
+            (#{id},#{item.id})
+        </foreach>
+    </insert>
+</mapper>
