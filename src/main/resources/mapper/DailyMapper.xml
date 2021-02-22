@@ -65,4 +65,21 @@
     <update id="updateDailyStatusAndPutTime">
         update wx_daily set daily_status = (select daily_status from wx_daily_status where daily_name = #{statusName}),daily_time = #{date} where id = #{id}
     </update>
+
+    <select id="findDailyByTeacherId" resultMap="BaseDailyMap">
+        select * from wx_daily where id in (
+            select daily_id from wx_user_daily_relation where user_id in (
+                select user_id from wx_student where team_id in (
+                    select team_id from wx_teacher_team_relation where teacherId = #{teacherId}
+                )
+                <if test="dailySearchParam.studentName != null and dailySearchParam.studentName != ''">
+                    and student_name like concat('%',#{dailySearchParam.studentName},'%')
+                </if>
+            )
+        )
+        <if test="dailySearchParam.dailyTitle != null and dailySearchParam.dailyTitle != ''">
+            and daily_title like concat('%',#{dailySearchParam.dailyTitle},'%')
+        </if>
+        order by create_time;
+    </select>
 </mapper>

@@ -70,4 +70,11 @@ public class DailyController {
         Result result = dailyService.findDailyByDailyId(id);
         return result;
     }
+
+    @GetMapping("/findDailyByTeacherId/{teacherId}")
+    public Result findDailyByTeacherId(@RequestBody DailySearchParam dailySearchParam,@PathVariable Long teacherId){
+        List<Daily> dailies = dailyService.findDailyByTeacherId(teacherId,dailySearchParam);
+        return Result.success(dailies);
+    }
+
 }

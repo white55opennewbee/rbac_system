@@ -7,6 +7,7 @@ import com.pc.rbac_system.vo.DailySearchParam;
 import io.swagger.models.auth.In;
 
 import java.util.Date;
+import java.util.List;
 
 
 public interface IDailyService {
@@ -23,4 +24,6 @@ public interface IDailyService {
     Integer updateDailyStatus(String statusName, Long dailyId, Date date);
 
     Result findDailyByDailyId(Long id);
+
+    List<Daily> findDailyByTeacherId(Long teacherId,DailySearchParam dailySearchParam);
 }

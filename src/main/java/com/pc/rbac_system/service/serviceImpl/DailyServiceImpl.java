@@ -75,5 +75,12 @@ public class DailyServiceImpl implements IDailyService {
         return Result.success(daily);
     }
 
+    @Override
+    public List<Daily> findDailyByTeacherId(Long teacherId,DailySearchParam dailySearchParam) {
+        PageHelper.startPage(dailySearchParam.getPage().getCurrentPage(),dailySearchParam.getPage().getMaxSize());
+        List<Daily> dailies = dailyMapper.findDailyByTeacherId(teacherId,dailySearchParam);
+        return dailies;
+    }
+
 
 }

@@ -24,4 +24,6 @@ public interface DailyMapper {
     Daily findDailyByDailyId(Long id);
 
     Integer updateDailyStatusAndPutTime(@Param("statusName")String dailyStatus,@Param("id") Long id,@Param("date") Date date);
+
+    List<Daily> findDailyByTeacherId(@Param("teacherId") Long teacherId,@Param("dailySearchParam") DailySearchParam dailySearchParam);
 }
