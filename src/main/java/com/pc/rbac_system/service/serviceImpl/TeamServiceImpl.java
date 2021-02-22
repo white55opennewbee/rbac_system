@@ -3,7 +3,9 @@ package com.pc.rbac_system.service.serviceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.Result;
+import com.pc.rbac_system.mapper.StudentMapper;
 import com.pc.rbac_system.mapper.TeamMapper;
+import com.pc.rbac_system.model.Student;
 import com.pc.rbac_system.model.Team;
 import com.pc.rbac_system.service.ITeamService;
 import io.swagger.models.auth.In;
@@ -18,6 +20,8 @@ import java.util.List;
 public class TeamServiceImpl implements ITeamService {
     @Autowired
     TeamMapper teamMapper;
+    @Autowired
+    StudentMapper studentMapper;
 
     @Override
     public Result findAllTeam(Integer currentPage, Integer maxSize,Long teacherId) {
@@ -65,6 +69,13 @@ public class TeamServiceImpl implements ITeamService {
     public Result findTeamById(Long id) {
         Team teamById = teamMapper.findTeamById(id);
         return Result.success(teamById);
+    }
+
+    @Override
+    public Result setTeamLeader(Long stuId, Long teamId) {
+        Student studentById = studentMapper.findStudentById(stuId);
+        Integer effectRow = teamMapper.setTeamLeader(studentById.getUserId(),teamId);
+        return Result.success(effectRow>0);
     }
 
 }

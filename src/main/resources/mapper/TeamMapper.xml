@@ -50,4 +50,8 @@
     <select id="findAllTeam" resultType="com.pc.rbac_system.model.Team">
         select * from wx_team
     </select>
+
+    <update id="setTeamLeader">
+        update wx_team set group_leader_id = #{stuId} where id = #{teamId}
+    </update>
 </mapper>

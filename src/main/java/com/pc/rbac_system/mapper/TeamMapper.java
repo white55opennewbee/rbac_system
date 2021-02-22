@@ -26,4 +26,5 @@ public interface TeamMapper {
     Team findTeamById(Long id);
 
 
+    Integer setTeamLeader(@Param("stuId") Long stuId,@Param("teamId") Long teamId);
 }

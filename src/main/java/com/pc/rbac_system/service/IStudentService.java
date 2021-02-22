@@ -21,4 +21,6 @@ public interface IStudentService {
     List<Student> findAllStudentId();
 
     Boolean setStudentNoTeam(Long studentId);
+
+    Student findStudentByUserId(Long userId);
 }

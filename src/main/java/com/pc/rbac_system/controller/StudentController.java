@@ -36,6 +36,13 @@ public class StudentController {
         return studentService.findStudentById(id);
     }
 
+    @GetMapping("/findStudentByUserId/{userId}")
+    public Result findStudentByUserId(@PathVariable Long userId){
+        Student student = studentService.findStudentByUserId(userId);
+        return Result.success(student);
+    }
+
+
     @PostMapping("/updateStudent")
     public Result updateStudent(@RequestBody Student student){
        return studentService.updateStudent(student);

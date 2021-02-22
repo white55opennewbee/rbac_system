@@ -92,4 +92,10 @@ public class StudentServiceImpl implements IStudentService {
         teamMapper.updateTeamCounts(teamId);
         return effect>0;
     }
+
+    @Override
+    public Student findStudentByUserId(Long userId) {
+        Student student =studentMapper.findStudentByUserId(userId);
+        return student;
+    }
 }

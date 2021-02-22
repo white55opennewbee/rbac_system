@@ -47,4 +47,8 @@
     <select id="findTeamIdByStudentId" resultType="java.lang.Long">
         select team_id from  wx_student where id = #{studentId}
     </select>
+
+    <select id="findStudentByUserId" parameterType="long" resultType="com.pc.rbac_system.model.Student">
+        select * from wx_student where user_id = #{userId}
+    </select>
 </mapper>

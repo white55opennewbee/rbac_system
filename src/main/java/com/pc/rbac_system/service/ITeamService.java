@@ -20,4 +20,6 @@ public interface ITeamService {
     List<Team> findAllTeam();
 
     Result findTeamById(Long id);
+
+    Result setTeamLeader(Long stuId, Long teamId);
 }

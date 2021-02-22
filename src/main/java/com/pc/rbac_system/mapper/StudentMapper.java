@@ -23,4 +23,6 @@ public interface StudentMapper {
     Integer setStudentNoTeam(Long studentId);
 
     Long findTeamIdByStudentId(Long studentId);
+
+    Student findStudentByUserId(Long userId);
 }

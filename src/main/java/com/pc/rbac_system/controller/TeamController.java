@@ -37,6 +37,11 @@ public class TeamController {
         return teamService.updateTeam(team);
     }
 
+    @PutMapping("/setTeamLeader/{stuId}/{teamId}")
+    public Result setTeamLeader(@PathVariable Long stuId,@PathVariable Long teamId){
+       return teamService.setTeamLeader(stuId,teamId);
+    }
+
 
     @GetMapping("/findTeamById/{id}")
     public Result findTeamById(@PathVariable Long id){
