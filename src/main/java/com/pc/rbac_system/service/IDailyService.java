@@ -4,10 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.model.Daily;
 import com.pc.rbac_system.vo.DailySearchParam;
-import io.swagger.models.auth.In;
 
 import java.util.Date;
-import java.util.List;
 
 
 public interface IDailyService {
@@ -25,5 +23,7 @@ public interface IDailyService {
 
     Result findDailyByDailyId(Long id);
 
-    List<Daily> findDailyByTeacherId(Long teacherId,DailySearchParam dailySearchParam);
+    PageInfo findDailyByTeacherId(Long teacherId, DailySearchParam dailySearchParam);
+
+    PageInfo findTodayDailyPutStatus(Long teacherId, Integer currentPage, Integer maxSize);
 }

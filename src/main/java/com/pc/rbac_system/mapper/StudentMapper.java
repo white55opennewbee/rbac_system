@@ -25,4 +25,8 @@ public interface StudentMapper {
     Long findTeamIdByStudentId(Long studentId);
 
     Student findStudentByUserId(Long userId);
+
+    Student findStudentByDailyId(Long dailyId);
+
+    List<Student> findStudentsByTeacherId(Long teacherId);
 }

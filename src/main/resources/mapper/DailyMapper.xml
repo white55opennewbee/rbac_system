@@ -67,19 +67,29 @@
     </update>
 
     <select id="findDailyByTeacherId" resultMap="BaseDailyMap">
-        select * from wx_daily where id in (
+        select wx_daily.id,wx_daily.daily_title,wx_daily.daily_body,wx_daily.daily_time,wx_daily.create_time,wx_daily.status,wx_daily_status.daily_name
+        from wx_daily left join wx_daily_status on wx_daily.daily_status = wx_daily_status.daily_status where wx_daily.id in (
             select daily_id from wx_user_daily_relation where user_id in (
                 select user_id from wx_student where team_id in (
-                    select team_id from wx_teacher_team_relation where teacherId = #{teacherId}
+                    select team_id from wx_teacher_team_relation where teacher_id = #{teacherId}
                 )
                 <if test="dailySearchParam.studentName != null and dailySearchParam.studentName != ''">
                     and student_name like concat('%',#{dailySearchParam.studentName},'%')
                 </if>
             )
         )
+        and wx_daily.daily_status != 1
         <if test="dailySearchParam.dailyTitle != null and dailySearchParam.dailyTitle != ''">
             and daily_title like concat('%',#{dailySearchParam.dailyTitle},'%')
         </if>
-        order by create_time;
+        order by create_time DESC
+    </select>
+
+    <select id="findDailyByUserId" resultMap="BaseDailyMap">
+            select wx_daily.id,wx_daily.daily_title,wx_daily.daily_body,wx_daily.daily_time,wx_daily.create_time,wx_daily.status,wx_daily_status.daily_name
+            from wx_daily
+            left join wx_user_daily_relation on wx_daily.id = wx_user_daily_relation.daily_id
+            left join wx_daily_status on wx_daily.daily_status = wx_daily_status.daily_status
+            where wx_user_daily_relation.user_id = #{userId} and wx_daily.create_time >= #{dailySearchParam.startTime} and wx_daily.daily_status != 1
     </select>
 </mapper>

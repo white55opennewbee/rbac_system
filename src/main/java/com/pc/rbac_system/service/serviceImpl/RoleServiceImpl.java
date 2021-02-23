@@ -183,5 +183,16 @@ public class RoleServiceImpl implements IRoleService {
         }
     }
 
+    @Override
+    public Integer updateRoleAndTeamLeaderRelation(Long oldTeamLeaderUserId, Long newTeamLeaderUserId) {
+
+        return roleMapper.updateRoleAndTeamLeaderRelation(oldTeamLeaderUserId,newTeamLeaderUserId);
+    }
+
+    @Override
+    public Integer updateRoleAndTeamLeaderRelation(Long newTeamLeaderUserId) {
+        return roleMapper.addRoleTeamLeaderToUser(newTeamLeaderUserId);
+    }
+
 
 }

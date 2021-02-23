@@ -10,7 +10,6 @@ import com.pc.rbac_system.model.AllocateRecord;
 import com.pc.rbac_system.model.Student;
 import com.pc.rbac_system.model.Team;
 import com.pc.rbac_system.service.IStudentService;
-import com.pc.rbac_system.service.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,5 +96,18 @@ public class StudentServiceImpl implements IStudentService {
     public Student findStudentByUserId(Long userId) {
         Student student =studentMapper.findStudentByUserId(userId);
         return student;
+    }
+
+    @Override
+    public Student findStudentByDailyId(Long dailyId) {
+        Student student = studentMapper.findStudentByDailyId(dailyId);
+        return student;
+    }
+
+    @Override
+    public PageInfo<Student> findStudentsByTeacherId(Long teacherId, Integer currentPage, Integer maxSize) {
+        PageHelper.startPage(currentPage,maxSize);
+        PageInfo<Student> pageInfo = new PageInfo<Student>(studentMapper.findStudentsByTeacherId(teacherId));
+        return pageInfo;
     }
 }

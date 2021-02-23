@@ -17,4 +17,8 @@ public interface IRoleService {
     List<Role> findRolesByUserId(Long id);
 
     Result findRolesBySearch(RoleSearchParam param);
+
+    Integer updateRoleAndTeamLeaderRelation(Long oldTeamLeaderUserId, Long newTeamLeaderUserId);
+
+    Integer updateRoleAndTeamLeaderRelation(Long newTeamLeaderUserId);
 }

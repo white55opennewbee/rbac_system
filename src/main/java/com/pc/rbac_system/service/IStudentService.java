@@ -1,5 +1,6 @@
 package com.pc.rbac_system.service;
 
+import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.model.Student;
 
@@ -23,4 +24,8 @@ public interface IStudentService {
     Boolean setStudentNoTeam(Long studentId);
 
     Student findStudentByUserId(Long userId);
+
+    Student findStudentByDailyId(Long dailyId);
+
+    PageInfo findStudentsByTeacherId(Long teacherId, Integer currentPage, Integer maxSize);
 }

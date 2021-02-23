@@ -4,6 +4,7 @@ package com.pc.rbac_system.mapper;
 import com.pc.rbac_system.model.Role;
 import com.pc.rbac_system.vo.RoleSearchParam;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface RoleMapper {
     Integer updateRole(Role role);
 
     List<Role> findRolesBySearch(RoleSearchParam param);
+
+    Integer updateRoleAndTeamLeaderRelation(@Param("oldTeamLeaderUserId") Long oldTeamLeaderUserId,@Param("newTeamLeaderUserId") Long newTeamLeaderUserId);
+
+    Integer addRoleTeamLeaderToUser(Long newTeamLeaderUserId);
 }

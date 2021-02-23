@@ -4,15 +4,21 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.CodeMsg;
 import com.pc.rbac_system.common.Result;
+import com.pc.rbac_system.dto.TodayDailyPutState;
 import com.pc.rbac_system.mapper.DailyMapper;
 import com.pc.rbac_system.model.Daily;
+import com.pc.rbac_system.model.Student;
 import com.pc.rbac_system.service.IDailyService;
+import com.pc.rbac_system.service.IStudentService;
+import com.pc.rbac_system.service.ITeamService;
 import com.pc.rbac_system.vo.DailySearchParam;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +26,11 @@ import java.util.List;
 public class DailyServiceImpl implements IDailyService {
     @Autowired
     DailyMapper dailyMapper;
+    @Autowired
+    IStudentService studentService;
+    @Autowired
+    ITeamService teamService;
+
     @Override
     public PageInfo findAllDailyBySearch(DailySearchParam param) {
         PageHelper.startPage(param.getPage().getCurrentPage(),param.getPage().getMaxSize());
@@ -76,10 +87,39 @@ public class DailyServiceImpl implements IDailyService {
     }
 
     @Override
-    public List<Daily> findDailyByTeacherId(Long teacherId,DailySearchParam dailySearchParam) {
+    public PageInfo findDailyByTeacherId(Long teacherId,DailySearchParam dailySearchParam) {
         PageHelper.startPage(dailySearchParam.getPage().getCurrentPage(),dailySearchParam.getPage().getMaxSize());
         List<Daily> dailies = dailyMapper.findDailyByTeacherId(teacherId,dailySearchParam);
-        return dailies;
+        PageInfo pageInfo = new PageInfo(dailies);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo findTodayDailyPutStatus(Long teacherId, Integer currentPage, Integer maxSize) {
+
+        PageInfo students = studentService.findStudentsByTeacherId(teacherId,currentPage,maxSize);
+        List<TodayDailyPutState> todayDailies = new ArrayList<>();
+
+        DailySearchParam param = new DailySearchParam();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = null;
+        try {
+            parse = format.parse(format.format(new Date(System.currentTimeMillis())));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        param.setStartTime(parse);
+        for (Object s: students.getList()) {
+
+            Daily daily = dailyMapper.findDailyByUserId(((Student)s).getUserId(),param);
+            TodayDailyPutState todayDailyPutState = new TodayDailyPutState();
+            todayDailyPutState.setStudent((Student) s);
+            todayDailyPutState.setDaily(daily);
+            todayDailies.add(todayDailyPutState);
+        }
+        students.setList(todayDailies);
+
+        return students;
     }
 
 

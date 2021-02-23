@@ -54,5 +54,10 @@ public class StudentController {
        return Result.success(success);
     }
 
+    @GetMapping("/findStudentByDailyId/{dailyId}")
+    public Result findStudentByDailyId(@PathVariable Long dailyId){
+        Student student = studentService.findStudentByDailyId(dailyId);
+        return Result.success(student);
+    }
 
 }

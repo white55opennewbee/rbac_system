@@ -51,4 +51,15 @@
     <select id="findStudentByUserId" parameterType="long" resultType="com.pc.rbac_system.model.Student">
         select * from wx_student where user_id = #{userId}
     </select>
+
+    <select id="findStudentByDailyId" parameterType="long" resultType="com.pc.rbac_system.model.Student">
+        select * from wx_student left join wx_user on wx_student.user_id = wx_user.id left join wx_user_daily_relation on wx_user.id = wx_user_daily_relation.user_id
+        where wx_user_daily_relation.daily_id = #{dailyId}
+    </select>
+
+    <select id="findStudentsByTeacherId" parameterType="long" resultType="com.pc.rbac_system.model.Student">
+        select * from wx_student where team_id in (
+            select team_id from wx_teacher_team_relation where teacher_id = #{teacherId}
+            )
+    </select>
 </mapper>

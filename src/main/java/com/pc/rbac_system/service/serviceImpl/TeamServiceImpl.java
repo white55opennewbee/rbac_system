@@ -7,6 +7,8 @@ import com.pc.rbac_system.mapper.StudentMapper;
 import com.pc.rbac_system.mapper.TeamMapper;
 import com.pc.rbac_system.model.Student;
 import com.pc.rbac_system.model.Team;
+import com.pc.rbac_system.service.IRoleService;
+import com.pc.rbac_system.service.IStudentService;
 import com.pc.rbac_system.service.ITeamService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,10 @@ public class TeamServiceImpl implements ITeamService {
     TeamMapper teamMapper;
     @Autowired
     StudentMapper studentMapper;
+    @Autowired
+    IStudentService studentService;
+    @Autowired
+    IRoleService roleService;
 
     @Override
     public Result findAllTeam(Integer currentPage, Integer maxSize,Long teacherId) {
@@ -73,7 +79,13 @@ public class TeamServiceImpl implements ITeamService {
 
     @Override
     public Result setTeamLeader(Long stuId, Long teamId) {
+        Long oldLeaderUserId = teamMapper.findTeamById(teamId).getGroupLeaderId();
         Student studentById = studentMapper.findStudentById(stuId);
+        if (oldLeaderUserId!=null&&oldLeaderUserId!=0){
+            roleService.updateRoleAndTeamLeaderRelation(oldLeaderUserId,studentById.getUserId());
+        }else {
+            roleService.updateRoleAndTeamLeaderRelation(studentById.getUserId());
+        }
         Integer effectRow = teamMapper.setTeamLeader(studentById.getUserId(),teamId);
         return Result.success(effectRow>0);
     }

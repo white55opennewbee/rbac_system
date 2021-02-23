@@ -53,4 +53,14 @@
             and create_time &lt; #{endTime}
         </if>
     </select>
+
+    <update id="updateRoleAndTeamLeaderRelation">
+        update wx_user_role_relation set admin_id = #{newTeamLeaderUserId} where admin_id = #{oldTeamLeaderUserId} and role_id = (
+            select id from wx_role where name = '组长'
+        )
+    </update>
+
+    <insert id="addRoleTeamLeaderToUser" parameterType="long">
+        insert into wx_user_role_relation (admin_id,role_id) values (#{newTeamLeaderUserId},(select id from wx_role where name = '组长'))
+    </insert>
 </mapper>

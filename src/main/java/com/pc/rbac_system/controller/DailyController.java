@@ -2,9 +2,11 @@ package com.pc.rbac_system.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.Result;
+import com.pc.rbac_system.dto.TodayDailyPutState;
 import com.pc.rbac_system.model.Daily;
 import com.pc.rbac_system.service.IDailyService;
 import com.pc.rbac_system.vo.DailySearchParam;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +42,13 @@ public class DailyController {
         return Result.success(result);
     }
 
+    @PostMapping("/setDailyStatusToRead/{id}")
+    @PreAuthorize("hasAuthority('wx:daily:update:read')")
+    public Result setDailyStatusToRead(@PathVariable("id")Long id){
+        Result result = dailyService.updateDailyStatus("已查看", id);
+        return Result.success(result);
+    }
+
 
     @PostMapping(value = {"/addDaily/{username}","/addDaily/{username}/{type}"})
     @PreAuthorize("hasAuthority('wx:daily:create')")
@@ -71,10 +80,17 @@ public class DailyController {
         return result;
     }
 
-    @GetMapping("/findDailyByTeacherId/{teacherId}")
+    @PostMapping("/findDailyByTeacherId/{teacherId}")
     public Result findDailyByTeacherId(@RequestBody DailySearchParam dailySearchParam,@PathVariable Long teacherId){
-        List<Daily> dailies = dailyService.findDailyByTeacherId(teacherId,dailySearchParam);
+        PageInfo dailies = dailyService.findDailyByTeacherId(teacherId,dailySearchParam);
         return Result.success(dailies);
     }
+
+    @GetMapping("/findTodayDailyPutStatus/{teacherId}/{currentPage}/{maxSize}")
+    public Result findTodayDailyPutStatusByTeacherId(@PathVariable Long teacherId,@PathVariable Integer currentPage,@PathVariable Integer maxSize){
+        PageInfo dailyPutState = dailyService.findTodayDailyPutStatus(teacherId,currentPage,maxSize);
+        return Result.success(dailyPutState);
+    }
+
 
 }
