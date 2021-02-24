@@ -12,9 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class RoleAndPermissionSchedule {
@@ -35,17 +33,17 @@ public class RoleAndPermissionSchedule {
         redisService.del("RBAC_SYSTEM:WX_ROLE:ROLES","RBAC-SYSTEM:WX_PERMISSION:ALLPERMISSIONS");
 
         Result allRoles = roleService.findAllRoles();
-//        List<Role> roles = (List<Role>) allRoles.getData();
-//        roles.stream().forEach(x -> {
-//            List<Permission> permissionsByRoleId = permissionService.findPermissionsByRoleId(x.getId());
-//            HashSet<Permission> permissions = CollectionUtil.newHashSet(permissionsByRoleId);
-//            x.setPermissions(permissions);
-//        });
-//        redisService.set("RBAC_SYSTEM:WX_ROLE:ROLES", roles);
+        List<Role> roles = (List<Role>) allRoles.getData();
+        roles.stream().forEach(x -> {
+            List<Permission> permissionsByRoleId = permissionService.findPermissionsByRoleId(x.getId());
+            HashSet<Permission> permissions = CollectionUtil.newHashSet(permissionsByRoleId);
+            x.setPermissions(new ArrayList<>(permissions));
+        });
+        redisService.set("RBAC_SYSTEM:WX_ROLE:ROLES", roles);
 
 
         List<Permission> permissions = permissionService.findAllPermission();
-//        redisService.set("RBAC-SYSTEM:WX_PERMISSION:ALLPERMISSIONS",permissions);
+        redisService.set("RBAC-SYSTEM:WX_PERMISSION:ALLPERMISSIONS",permissions);
 
     }
 

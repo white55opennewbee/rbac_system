@@ -88,4 +88,8 @@
         select * from wx_user where id in (select admin_id from wx_user_role_relation where role_id in (select id from wx_role where name = #{name}))
 
     </select>
+
+    <select id="findTeacherByTeamId" resultType="com.pc.rbac_system.model.User" parameterType="long">
+        select * from wx_user where id  = (select teacher_id from wx_teacher_team_relation where team_id = #{id})
+    </select>
 </mapper>

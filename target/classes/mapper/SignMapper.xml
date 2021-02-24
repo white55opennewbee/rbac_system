@@ -3,9 +3,9 @@
 <mapper namespace="com.pc.rbac_system.mapper.SignMapper">
 
     <insert id="putAll" parameterType="list">
-        insert into wx_sign (student_id,sign_in,create_time,student_name) values
-        <foreach collection="list" item="item" separator="," open="(" close=")">
-            #{item.studentId},#{item.signIn},#{item.createTime},#{item.studentName}
+        insert into wx_sign (student_id,sign_in,create_time,student_name,late_time) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.studentId},#{item.signIn},#{item.createTime},#{item.studentName},#{item.lateTime})
         </foreach>
     </insert>
 </mapper>

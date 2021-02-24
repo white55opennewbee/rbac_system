@@ -3,24 +3,27 @@ package com.pc.rbac_system.service.serviceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.CodeMsg;
+import com.pc.rbac_system.common.ExportWord;
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.dto.TodayDailyPutState;
 import com.pc.rbac_system.mapper.DailyMapper;
 import com.pc.rbac_system.model.Daily;
 import com.pc.rbac_system.model.Student;
+import com.pc.rbac_system.model.Team;
+import com.pc.rbac_system.model.User;
 import com.pc.rbac_system.service.IDailyService;
 import com.pc.rbac_system.service.IStudentService;
 import com.pc.rbac_system.service.ITeamService;
+import com.pc.rbac_system.service.IUserService;
 import com.pc.rbac_system.vo.DailySearchParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DailyServiceImpl implements IDailyService {
@@ -30,6 +33,8 @@ public class DailyServiceImpl implements IDailyService {
     IStudentService studentService;
     @Autowired
     ITeamService teamService;
+    @Autowired
+    IUserService userService;
 
     @Override
     public PageInfo findAllDailyBySearch(DailySearchParam param) {
@@ -120,6 +125,29 @@ public class DailyServiceImpl implements IDailyService {
         students.setList(todayDailies);
 
         return students;
+    }
+
+    @Override
+    public void CreateDailyWord(Long dailyId, HttpServletResponse response) {
+        Map<String,Object> map = new HashMap();
+        Daily daily = dailyMapper.findDailyByDailyId(dailyId);
+        Student student = studentService.findStudentByDailyId(dailyId);
+        Result teamById = teamService.findTeamById(student.getTeamId());
+        Team team = (Team) teamById.getData();
+        User coach = userService.findUserByUserId(team.getCoachId());
+        User teacher = userService.findTeacherByTeamId(team.getId());
+        map.put("teacherName",teacher.getUsername());
+        map.put("coachName",coach.getUsername());
+        map.put("title",daily.getDailyTime());
+        map.put("body",daily.getDailyBody());
+        map.put("studentName",student.getStudentName());
+        map.put("teamName",team.getTeamName());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String format = simpleDateFormat.format(daily.getDailyTime());
+        map.put("dailyTime",format);
+        ExportWord exportWord = new ExportWord();
+        exportWord.createWord(map,response);
+
     }
 
 

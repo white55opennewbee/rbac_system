@@ -221,4 +221,9 @@ public class UserServiceImpl implements IUserService {
     public List<User> findAllByRoleName(String roleName) {
         return userMapper.findAllByRoleName(roleName);
     }
+
+    @Override
+    public User findTeacherByTeamId(Long id) {
+        return userMapper.findTeacherByTeamId(id);
+    }
 }

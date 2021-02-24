@@ -9,6 +9,7 @@ import com.pc.rbac_system.service.IStudentService;
 import com.pc.rbac_system.service.ITeamService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -46,35 +47,30 @@ public class SignSchedule {
             }
             redisService.set("RBAC_SYSTEM:SIGN:TODAY:TEAM:"+team.getId(),signs);
         });
-
-
     }
+
 
 
     @Scheduled(cron = "0 0 10 ? * 1,2,3,4,5")
     public void submitSign(){
+        List<Sign> allSigns = new ArrayList<>();
         Set<String> keys = redisService.patternKeys("RBAC_SYSTEM:SIGN:TODAY:TEAM:");
         if (keys!=null&&keys.size()>0){
             keys.stream().forEach(x->{
-                    List<Sign> signs = redisService.get(x);
-                    signs.stream().forEach(y->{
-                        if (y.getSignIn() == 0){
-                            y.setSignIn(4);// 标记旷课
-                        }
-                    });
-
-                    Integer integer = signService.putAll(signs);
-                if (integer>0){
-                    redisService.del(x);
-                }
-
+                List<Sign> signs = redisService.get(x);
+                signs.stream().forEach(y->{
+                    if (y.getSignIn() == 0){
+                        y.setSignIn(4);// 标记旷课
+                    }
+                });
+                allSigns.addAll(signs);
             });
-
-
-
+            Integer integer = signService.putAll(allSigns);
+            redisService.del("RBAC_SYSTEM:SIGN:TODAY:TEAM");
         }else {
             System.out.println("今日无签到");
         }
-
     }
+
+
 }

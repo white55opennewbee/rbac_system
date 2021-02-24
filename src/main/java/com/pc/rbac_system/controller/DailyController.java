@@ -1,6 +1,7 @@
 package com.pc.rbac_system.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.pc.rbac_system.common.ExportWord;
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.dto.TodayDailyPutState;
 import com.pc.rbac_system.model.Daily;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/daily")
@@ -90,6 +93,12 @@ public class DailyController {
     public Result findTodayDailyPutStatusByTeacherId(@PathVariable Long teacherId,@PathVariable Integer currentPage,@PathVariable Integer maxSize){
         PageInfo dailyPutState = dailyService.findTodayDailyPutStatus(teacherId,currentPage,maxSize);
         return Result.success(dailyPutState);
+    }
+
+
+    @GetMapping("/CreateDailyWord/{dailyId}")
+    public void CreateDailyWord(HttpServletResponse response, @PathVariable Long dailyId){
+        dailyService.CreateDailyWord(dailyId,response);
     }
 
 

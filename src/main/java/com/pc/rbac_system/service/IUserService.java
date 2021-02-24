@@ -39,4 +39,6 @@ public interface IUserService {
     Result findusersByRole(String roleName);
 
     List<User> findAllByRoleName(String roleName);
+
+    User findTeacherByTeamId(Long id);
 }

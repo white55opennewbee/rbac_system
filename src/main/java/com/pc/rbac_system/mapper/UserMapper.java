@@ -34,4 +34,6 @@ public interface UserMapper {
     List<User> findusersByRole(String roleName);
 
     List<User> findAllByRoleName(String name);
+
+    User findTeacherByTeamId(Long id);
 }
