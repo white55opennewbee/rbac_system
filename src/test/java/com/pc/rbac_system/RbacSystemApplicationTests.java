@@ -79,7 +79,8 @@ class RbacSystemApplicationTests {
 
     @Test
     void testWord(){
-
+        ExportWord exportWord = new ExportWord();
+        exportWord.createWord(exportWord.getData());
     }
 
 
