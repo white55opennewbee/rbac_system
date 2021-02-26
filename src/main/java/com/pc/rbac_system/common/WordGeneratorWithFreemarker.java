@@ -1,12 +1,6 @@
 package com.pc.rbac_system.common;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +25,11 @@ public class WordGeneratorWithFreemarker {
         configuration = new Configuration(Configuration.VERSION_2_3_23);
         configuration.setDefaultEncoding("utf-8");
         configuration.setClassicCompatible(true);
-        configuration.setClassForTemplateLoading(WordGeneratorWithFreemarker.class, "/hncr/bzPlatform/prjMgr/word/ftl");
+        configuration.setClassForTemplateLoading(WordGeneratorWithFreemarker.class, "/wordModel");
         allTemplates = new HashMap<String, Template>();
         try {
-            allTemplates.put("xmsb", configuration.getTemplate("xmsb.ftl"));
-            allTemplates.put("xmht", configuration.getTemplate("xmht.ftl"));
+//            allTemplates.put("dailyModelmht2", configuration.getTemplate("dailyModelmht2.ftl"));
+            allTemplates.put("dailyTemp", configuration.getTemplate("dailyTemp.ftl"));
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -47,10 +41,12 @@ public class WordGeneratorWithFreemarker {
     }
 
     public static void createDoc(Map<String, Object> dataMap, String templateName, OutputStream out) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
-        //String name = "d:\\temp" + (int) (Math.random() * 100000) + ".doc";  
-        //Template t = allTemplates.get(type);  
-        Template t = configuration.getTemplate(templateName);
+        //String name = "d:\\temp" + (int) (Math.random() * 100000) + ".doc";
+        System.out.println(allTemplates);
+        Template t = allTemplates.get(templateName);
 
+//        Template t = configuration.getTemplate(templateName);
+//        System.out.println(t.toString());
         WordHtmlGeneratorHelper.handleAllObject(dataMap);
 
         try {
@@ -66,28 +62,48 @@ public class WordGeneratorWithFreemarker {
     }
 
 
-    public static void main(String[] args) {
-        HashMap<String, Object> data = new HashMap<String, Object>();
+    public static void main(String[] args) throws IOException {
+        HashMap<String, Object> dataMap = new HashMap<String, Object>();
+        // 标题
+        dataMap.put("title",("日报"));
+        dataMap.put("teacher",("老师"));
+        dataMap.put("coach",("教练"));
+        dataMap.put("dailyTitle",("日报标题"));
+        dataMap.put("dailybody",("日报内容"));
+        dataMap.put("studentName",("学生姓名"));
+        dataMap.put("teamName",("小组名称"));
+        dataMap.put("subDate",("提交日期"));
+        dataMap.put("teacherName", ("潘金莲"));
+        dataMap.put("coachName", ("西门庆"));
+        dataMap.put("dailyTitleValue", WordHtmlGeneratorHelper.string2Ascii("大脑腐写真集"));
+        dataMap.put("body", "啥都没学会<p><img src=\"http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png\" alt=\"[坏笑]\" data-w-e=\"1\"><img src=\"d:/1.jpg\" style=\"max-width: 100%;\">&nbsp;sadasdasda<br></p>");
 
-        data.put("dwmc", WordHtmlGeneratorHelper.string2Ascii("湖南省交通科学研究 院"));
-        data.put("picture", WordHtmlGeneratorHelper.string2Ascii("这里显示图片"));
+        dataMap.put("studentNameValue", WordHtmlGeneratorHelper.string2Ascii("武松"));
+        dataMap.put("teamNameValue", WordHtmlGeneratorHelper.string2Ascii("上山打老hu"));
+        dataMap.put("subDateValue", WordHtmlGeneratorHelper.string2Ascii("2020-1-5"));
 
         String docFilePath = "d:\\temp" + (int) (Math.random() * 100000) + ".doc";
         File f = new File(docFilePath);
+
+
         OutputStream out;
-        try {
-            out = new FileOutputStream(f);
-            WordGeneratorWithFreemarker.createDoc(data, "xmht", out);
+        out = new FileOutputStream(f);
+        WordGeneratorWithFreemarker.createDoc(dataMap, "dailyTemp", out);
+//        WordGeneratorWithFreemarker.createDoc(dataMap, "doczhanglogn", out);
 
-        } catch (FileNotFoundException e) {
-
-        } catch (MalformedTemplateNameException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            out = new FileOutputStream(f);
+//            WordGeneratorWithFreemarker.createDoc(dataMap, "dailyModelmht", out);
+//
+//        } catch (FileNotFoundException e) {
+//
+//        } catch (MalformedTemplateNameException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
