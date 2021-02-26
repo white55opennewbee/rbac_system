@@ -266,8 +266,7 @@ public class RichHtmlHandler {
         StringBuilder sb = new StringBuilder();
         sb.append("<div>");
 
-        sb.append("<img style='height:100px;width:200px;display:block;' src='F:\\1.jpg' />");
-        sb.append("<img style='height:100px;width:200px;display:block;' src='F:\\2.jpg' />");
+        sb.append("<img style='height:100px;width:200px;display:block;' src='D:\\1.jpg' />");
         sb.append("<span>哈哈哈哈哈嗝</span>");
         sb.append("</div>");
 
@@ -284,7 +283,7 @@ public class RichHtmlHandler {
         try {
             handler.handledHtml(false);
 
-            String logFile = "D:\\log.txt";
+            String logFile = "D:\\log2.txt";
 
             File file = new File(logFile);
             //FileOutputStream out=new FileOutputStream(file);
