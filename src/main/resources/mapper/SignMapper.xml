@@ -8,4 +8,8 @@
             (#{item.studentId},#{item.signIn},#{item.createTime},#{item.studentName},#{item.lateTime})
         </foreach>
     </insert>
+
+    <select id="findAllSignStatus" resultType="com.pc.rbac_system.model.SignStatus">
+        select * from wx_sign_status
+    </select>
 </mapper>

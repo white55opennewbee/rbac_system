@@ -1,9 +1,11 @@
 package com.pc.rbac_system.service.serviceImpl;
 
+import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.CodeMsg;
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.mapper.SignMapper;
 import com.pc.rbac_system.model.Sign;
+import com.pc.rbac_system.model.SignStatus;
 import com.pc.rbac_system.service.IRedisService;
 import com.pc.rbac_system.service.ISignService;
 import com.pc.rbac_system.service.IStudentService;
@@ -30,9 +32,12 @@ public class SignServiceImpl implements ISignService {
     public Result findTodaySignByTeamId(Long teamId, Integer currentPage, Integer maxSize) {
         if (redisService.hasKey("RBAC_SYSTEM:SIGN:TODAY:TEAM:"+teamId)){
 //            List<Student> students = studentService.findStudentsByTeamId(teamId);
+
+
             Long startCount =  (currentPage-1L)*maxSize;
             List<Sign> result = new ArrayList<>();
             List<Sign> todayList = redisService.get("RBAC_SYSTEM:SIGN:TODAY:TEAM:"+teamId);
+            Integer pages = todayList.size()%maxSize == 0?todayList.size()/maxSize:todayList.size()/maxSize+1;
             AtomicLong count = new AtomicLong(0);
             todayList.stream().filter(x->{
                 if (result.size()<maxSize){
@@ -44,8 +49,12 @@ public class SignServiceImpl implements ISignService {
                         result.add(sign);
                 }
             });
+            PageInfo pageInfo = new PageInfo();
+            pageInfo.setPages(pages);
+            pageInfo.setList(result);
 
-            return Result.success(result);
+
+            return Result.success(pageInfo);
         }
         return Result.error(CodeMsg.SIGN_NOT_EXIST);
 
@@ -63,8 +72,8 @@ public class SignServiceImpl implements ISignService {
     @Override
     public boolean SetTodaySignType(Integer type,Long studentId,Long teamId) {
         boolean set = false;
-        if(redisService.hasKey("BAC_SYSTEM:SIGN:TODAY:TEAM:"+teamId)){
-            List<Sign> signs = redisService.get("BAC_SYSTEM:SIGN:TODAY:TEAM:" + teamId);
+        if(redisService.hasKey("RBAC_SYSTEM:SIGN:TODAY:TEAM:"+teamId)){
+            List<Sign> signs = redisService.get("RBAC_SYSTEM:SIGN:TODAY:TEAM:" + teamId);
             for (Sign sign:signs){
                 if (sign.getStudentId().longValue() == studentId.longValue()){
                     sign.setLateTime(new Date(System.currentTimeMillis()));
@@ -77,11 +86,16 @@ public class SignServiceImpl implements ISignService {
 //                    }
                 }
             }
-            set = redisService.set("BAC_SYSTEM:SIGN:TODAY:TEAM:" + teamId, signs);
+            set = redisService.set("RBAC_SYSTEM:SIGN:TODAY:TEAM:" + teamId, signs);
 
         }else {
             System.out.println("无小组签到信息");
         }
         return set;
+    }
+
+    @Override
+    public List<SignStatus> findAllSignStatus() {
+        return signMapper.findAllSignStatus();
     }
 }

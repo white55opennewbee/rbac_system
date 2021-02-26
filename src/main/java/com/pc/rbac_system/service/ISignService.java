@@ -2,6 +2,7 @@ package com.pc.rbac_system.service;
 
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.model.Sign;
+import com.pc.rbac_system.model.SignStatus;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface ISignService {
     Integer putAll(List<Sign> signs);
 
     boolean SetTodaySignType(Integer type, Long studentId, Long teamId);
+
+    List<SignStatus> findAllSignStatus();
 }

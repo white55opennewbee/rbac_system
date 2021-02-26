@@ -1,6 +1,7 @@
 package com.pc.rbac_system.model;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
@@ -10,10 +11,15 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role extends BaseModel {
+public class Role extends BaseModel implements GrantedAuthority {
     String name;
     String description;
     Long adminCount;
 
     List<Permission> permissions;
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_"+this.getName();
+    }
 }

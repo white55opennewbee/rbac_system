@@ -19,7 +19,7 @@ public class PermissionServiceImpl implements IPermissionService {
     @Autowired
     IRedisService redisService;
     @Value("${jwt.expiration}")
-    Long redisPermissionInfoExpirationTime;
+    Long redisPermissionInfoExpirationTimeSecond;
 
     @Override
     public List<Permission> findPermissionsByUserId(Long userId) {
@@ -29,7 +29,7 @@ public class PermissionServiceImpl implements IPermissionService {
             System.out.println("tokenCheckUserPermission from redis");
         } else {
             list = permissionMapper.findPermissionsByUserId(userId);
-            redisService.setWithExpire("RBAC_SYSTEM:WX_PERMISSION:LOGIN:INFO:" + userId, list,redisPermissionInfoExpirationTime);
+            redisService.setWithExpire("RBAC_SYSTEM:WX_PERMISSION:LOGIN:INFO:" + userId, list,redisPermissionInfoExpirationTimeSecond);
             System.out.println("tokenCheckUserPermission from redis");
         }
         return list;

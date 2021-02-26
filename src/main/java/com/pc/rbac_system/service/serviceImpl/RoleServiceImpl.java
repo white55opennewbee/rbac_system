@@ -11,6 +11,7 @@ import com.pc.rbac_system.service.IRedisService;
 import com.pc.rbac_system.service.IRoleService;
 import com.pc.rbac_system.vo.RoleSearchParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.pc.rbac_system.mapper.RoleMapper;
 import org.springframework.transaction.annotation.Isolation;
@@ -29,6 +30,9 @@ public class RoleServiceImpl implements IRoleService {
     IRedisService redisService;
     @Autowired
     IPermissionService permissionService;
+
+    @Value("${jwt.expiration}")
+    Long redisRoleInfoExpirationTimeSecond;
 
     @Override
     public Result findAllRoles() {
@@ -99,7 +103,13 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public List<Role> findRolesByUserId(Long id) {
-        List<Role> list = roleMapper.findRolesByUserId(id);
+        List<Role> list = new ArrayList<>();
+        if (redisService.hasKey("RBAC_SYSTEM:WX_ROLE:LOGIN:INFO:"+id)){
+            list = redisService.get("RBAC_SYSTEM:WX_ROLE:LOGIN:INFO:"+id);
+        }else {
+            list = roleMapper.findRolesByUserId(id);
+            redisService.setWithExpire("RBAC_SYSTEM:WX_ROLE:LOGIN:INFO:"+id,list,redisRoleInfoExpirationTimeSecond);
+        }
         return list;
     }
 
