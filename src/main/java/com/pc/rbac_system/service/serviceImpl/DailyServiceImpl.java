@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.pc.rbac_system.common.CodeMsg;
 import com.pc.rbac_system.common.ExportWord;
 import com.pc.rbac_system.common.Result;
+import com.pc.rbac_system.common.WordHtmlGeneratorHelper;
 import com.pc.rbac_system.dto.TodayDailyPutState;
 import com.pc.rbac_system.mapper.DailyMapper;
 import com.pc.rbac_system.model.Daily;
@@ -136,15 +137,17 @@ public class DailyServiceImpl implements IDailyService {
         Team team = (Team) teamById.getData();
         User coach = userService.findUserByUserId(team.getCoachId());
         User teacher = userService.findTeacherByTeamId(team.getId());
-        map.put("teacherName",teacher.getUsername());
-        map.put("coachName",coach.getUsername());
-        map.put("title",daily.getDailyTime());
-        map.put("body",daily.getDailyBody());
-        map.put("studentName",student.getStudentName());
-        map.put("teamName",team.getTeamName());
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String format = simpleDateFormat.format(daily.getDailyTime());
-        map.put("dailyTime",format);
+        map.put("teacherName",teacher.getUsername());
+        map.put("coachName",coach.getUsername());
+        map.put("dailyTitleValue",daily.getDailyTitle());
+        map.put("body",daily.getDailyBody());
+        map.put("studentNameValue", student.getStudentName());
+        map.put("teamNameValue",team.getTeamName());
+
+        map.put("subDateValue",WordHtmlGeneratorHelper.string2Ascii(format));
         ExportWord exportWord = new ExportWord();
         exportWord.createWord(map,response);
 

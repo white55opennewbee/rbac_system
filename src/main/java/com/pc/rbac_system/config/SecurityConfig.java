@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 })
-                .and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/common/**","/login","/register","/css/**","/js/**","/font/**", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll().anyRequest().authenticated()
+                .and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/common/**","/login","/register","/css/**","/js/**","/font/**", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**","/daily/CreateDailyWord/**").permitAll().anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().userDetailsService(userDetailsService).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;
