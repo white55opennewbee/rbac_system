@@ -1,8 +1,6 @@
 package com.pc.rbac_system.common;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +31,8 @@ public class RichHtmlHandler {
     private String typeid;
 
     private String handledDocBodyBlock;
-    private List<String> docBase64BlockResults = new ArrayList<String>();
-    private List<String> xmlImgRefs = new ArrayList<String>();
+    private List<String> docBase64BlockResults = new ArrayList<>();
+    private List<String> xmlImgRefs = new ArrayList<>();
 
     public String getDocSrcLocationPrex() {
         return docSrcLocationPrex;
@@ -111,27 +109,20 @@ public class RichHtmlHandler {
     }
 
     public RichHtmlHandler(String html) {
-        doc = Jsoup.parse(wrappHtml(html));
+        doc = Jsoup.parse(wrapHtml(html));
     }
 
-    public void re_init(String html) {
+    public void reInit(String html) {
         doc = null;
-        doc = Jsoup.parse(wrappHtml(html));
+        doc = Jsoup.parse(wrapHtml(html));
         docBase64BlockResults.clear();
         xmlImgRefs.clear();
     }
 
     /**
-     * @param @return
-     * @return String
-     * @throws IOException
-     * @throws
      * @Description: 获得已经处理过的HTML文件
-     * @author:LiaoFei
-     * @date:2016-3-28 下午4:16:34
      */
-    public void handledHtml(boolean isWebApplication)
-            throws IOException {
+    public void handledHtml(boolean isWebApplication) {
         Elements imags = doc.getElementsByTag("img");
 
         if (imags == null || imags.size() == 0) {
@@ -144,8 +135,7 @@ public class RichHtmlHandler {
 
         for (Element item : imags) {
             // 把文件取出来
-            String src = item.attr("src");
-            String srcRealPath = src;
+            String srcRealPath = item.attr("src");
 
 //			if (isWebApplication) {
 //				String contentPath=RequestResponseContext.getRequest().getContextPath();
@@ -161,25 +151,21 @@ public class RichHtmlHandler {
 //			}
 
             File imageFile = new File(srcRealPath);
-            String imageFielShortName = imageFile.getName();
+            String imageFileShortName = imageFile.getName();
             // 获取文件后缀名
-//			String fileTypeName = JFileUtils.getFileSuffix(srcRealPath);
             String fileName = srcRealPath.substring(srcRealPath.lastIndexOf("\\") + 1);
-            String fileTypeName = fileName.substring(srcRealPath.lastIndexOf(".") + 1);
+            String fileTypeName = fileName.substring(fileName.lastIndexOf(".") + 1);
             String docFileName = "image" + UUID.randomUUID().toString().replaceAll("-", "") + "."
                     + fileTypeName;
             String srcLocationShortName = docSrcParent + "/" + docFileName;
-
             String styleAttr = item.attr("style"); // 样式
             //高度
             String imagHeightStr = item.attr("height");
-            ;
             if (StringUtils.isEmpty(imagHeightStr)) {
                 imagHeightStr = getStyleAttrValue(styleAttr, "height");
             }
             //宽度
             String imagWidthStr = item.attr("width");
-            ;
             if (StringUtils.isEmpty(imagHeightStr)) {
                 imagHeightStr = getStyleAttrValue(styleAttr, "width");
             }
@@ -197,20 +183,25 @@ public class RichHtmlHandler {
             int imageWidth = Integer.parseInt(imagWidthStr);
 
             // 得到文件的word mht的body块
-            String handledDocBodyBlock = WordImageConvertor.toDocBodyBlock(srcRealPath,
-                    imageFielShortName, imageHeight, imageWidth, styleAttr,
+            String handledDocBodyBlock = WordImageConvector.toDocBodyBlock(srcRealPath,
+                    imageFileShortName, imageHeight, imageWidth, styleAttr,
                     srcLocationShortName, shapeidPrex, spidPrex, typeid);
 
             item.parent().append(handledDocBodyBlock);
             item.remove();
             // 去替换原生的html中的imag
 
-            String base64Content = WordImageConvertor
-                    .imageToBase64(srcRealPath);
+            String base64Content = null;
+            try {
+                base64Content = WordImageConvector
+                        .imageToBase64(srcRealPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             String contextLoacation = docSrcLocationPrex + "/" + docSrcParent
                     + "/" + docFileName;
 
-            String docBase64BlockResult = WordImageConvertor
+            String docBase64BlockResult = WordImageConvector
                     .generateImageBase64Block(nextPartId, contextLoacation,
                             fileTypeName, base64Content);
             docBase64BlockResults.add(docBase64BlockResult);
@@ -240,82 +231,13 @@ public class RichHtmlHandler {
         return "";
     }
 
-    private String wrappHtml(String html) {
+    private String wrapHtml(String html) {
         // 因为传递过来都是不完整的doc
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>");
-        sb.append("<body>");
-        sb.append(html);
-
-        sb.append("</body>");
-        sb.append("</html>");
-        return sb.toString();
+        return "<html>" +
+                "<body>" +
+                html +
+                "</body>" +
+                "</html>";
     }
-
-    /**
-     * @param @param args
-     * @return void
-     * @throws IOException
-     * @throws
-     * @Description: 测试
-     * @author:LiaoFei
-     * @date:2016-3-29 上午9:39:12
-     */
-    public static void main(String[] args) throws IOException {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("<div>");
-
-        sb.append("<img style='height:100px;width:200px;display:block;' src='D:\\1.jpg' />");
-        sb.append("<span>哈哈哈哈哈嗝</span>");
-        sb.append("</div>");
-
-        RichHtmlHandler handler = new RichHtmlHandler(sb.toString());
-
-        handler.setDocSrcLocationPrex("file:///C:/70ED9946");
-        handler.setDocSrcParent("file9462.files");
-        handler.setNextPartId("01D189BB.30229F00");
-        handler.setShapeidPrex("_x56fe__x7247__x0020");
-        handler.setSpidPrex("_x0000_i");
-        handler.setTypeid("#_x0000_t75");
-
-        //写入文件中，
-        try {
-            handler.handledHtml(false);
-
-            String logFile = "D:\\log2.txt";
-
-            File file = new File(logFile);
-            //FileOutputStream out=new FileOutputStream(file);
-            FileWriter fw = new FileWriter(file);
-
-
-            fw.write("======handledDocBody block==========\n");
-            fw.write(handler.getHandledDocBodyBlock());
-
-            fw.write("======handledBase64Block==========\n");
-            if (handler.getDocBase64BlockResults() != null
-                    && handler.getDocBase64BlockResults().size() > 0) {
-                for (String item : handler.getDocBase64BlockResults()) {
-                    fw.write(item + "\n");
-                }
-            }
-            if (handler.getXmlImgRefs() != null
-                    && handler.getXmlImgRefs().size() > 0) {
-                fw.write("======xmlimaHref==========\n");
-                for (String item : handler.getXmlImgRefs()) {
-                    fw.write(item + "\n");
-                }
-            }
-
-            fw.close();
-
-        } catch (FileNotFoundException e) {
-
-            e.printStackTrace();
-        }
-
-    }
-
 
 }
