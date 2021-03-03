@@ -9,6 +9,8 @@ import com.pc.rbac_system.model.SignStatus;
 import com.pc.rbac_system.service.IRedisService;
 import com.pc.rbac_system.service.ISignService;
 import com.pc.rbac_system.service.IStudentService;
+import com.pc.rbac_system.vo.SignSearchParam;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -97,5 +99,15 @@ public class SignServiceImpl implements ISignService {
     @Override
     public List<SignStatus> findAllSignStatus() {
         return signMapper.findAllSignStatus();
+    }
+
+    @Override
+    public List<Sign> findSignsRecordByPage(SignSearchParam signSearchParam, Long teacherId) {
+        return signMapper.findSignsRecordByPage(signSearchParam,teacherId);
+    }
+
+    @Override
+        public Boolean changeStudentSignType(Long signTypeId, Long signId) {
+        return signMapper.changeStudentSignType(signTypeId,signId)>0;
     }
 }

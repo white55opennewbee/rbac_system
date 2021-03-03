@@ -2,6 +2,7 @@ package com.pc.rbac_system.controller;
 
 import com.pc.rbac_system.common.Result;
 import com.pc.rbac_system.service.ISignService;
+import com.pc.rbac_system.vo.SignSearchParam;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,9 +27,21 @@ public class SignController {
         return Result.success(b);
     }
 
+    @PostMapping("/changeStudentSignType/{signId}/{signTypeId}")
+    public Result changeStudentSignType(@PathVariable Long signTypeId, @PathVariable Long signId){
+        boolean b = signService.changeStudentSignType(signTypeId, signId);
+        return Result.success(b);
+    }
+
     @GetMapping("/findAllSignStatus")
     public Result findAllSignStatus(){
         return Result.success(signService.findAllSignStatus());
+    }
+
+    @PostMapping("/findSignsRecordByPage/{teacherId}")
+    @PreAuthorize("hasAnyRole('班主任')")
+    public Result findSignsRecordByPage(@RequestBody SignSearchParam signSearchParam,@PathVariable Long teacherId){
+       return Result.success(signService.findSignsRecordByPage(signSearchParam,teacherId));
     }
 
 }

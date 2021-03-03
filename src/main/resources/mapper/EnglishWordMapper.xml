@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.pc.rbac_system.mapper.EnglishWordMapper">
+
+    <insert id="addEnglishWord" parameterType="com.pc.rbac_system.model.EnglishWord" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into wx_words (english_word,chinese,author,create_time,student_id)
+        values
+        (#{englishWord},#{chinese},#{author},#{createTime},#{studentId})
+    </insert>
+
+    <select id="findAllEnglishWord" resultType="com.pc.rbac_system.model.EnglishWord" parameterType="string">
+        select * from wx_words where status = 1
+        <if test="words !=null and words != ''">
+            and english_word like concat('%',#{words},'%') OR chinese like concat('%',#{words},'%')
+        </if>
+    </select>
+
+    <delete id="deleteEnglishWord" parameterType="long">
+        delete from wx_words where id = #{wordId}
+    </delete>
+
+    <update id="updateEnglishWord" parameterType="com.pc.rbac_system.model.EnglishWord">
+        update wx_words set english_word = #{englishWord},chinese = #{chinese} where id = #{id}
+    </update>
+
+    <select id="findEnglishWordById" parameterType="long" resultType="com.pc.rbac_system.model.EnglishWord">
+        select * from wx_words where id = #{id}
+    </select>
+
+    <update id="englishAgree">
+        update wx_words set agree_count = agree_count + #{count}  where id = #{wordId}
+    </update>
+
+    <select id="findEnglishWordsByStudentId" resultType="com.pc.rbac_system.model.EnglishWord" parameterType="long">
+        select * from wx_words where student_id = #{studentId}
+    </select>
+
+    <select id="myFavoriteEnglishWords" resultType="com.pc.rbac_system.model.EnglishWord">
+        select * from wx_words left join  wx_user_words_favorite_relation on wx_words.id = wx_user_words_favorite_relation.word_id
+        where wx_words.status = 1
+        <if test="words != null and words != ''">
+            and wx_words.english_word like concat('%',#{words},'%') OR wx_words.chinese like concat('%',#{words},'%')
+        </if>
+        and wx_user_words_favorite_relation.user_id = #{userId}
+    </select>
+
+
+
+    <update id="setFavoriteEnglishWords">
+        <choose>
+            <when test="option == 1">
+                insert into wx_user_words_favorite_relation (user_id,word_id) values (#{userId},#{wordId})
+            </when>
+            <when test="option == -1">
+                delete from wx_user_words_favorite_relation where user_id = #{userId} and word_id #{wordId}
+            </when>
+        </choose>
+    </update>
+
+    <update id="setAgreeRelation">
+        <choose>
+            <when test="agree == 1">
+                insert into wx_user_words_agree_relation (user_id,word_id) values (#{userId},#{wordId})
+            </when>
+            <when test="agree == -1">
+                delete from wx_user_words_agree_relation where user_id = #{userId} and word_id #{wordId}
+            </when>
+        </choose>
+    </update>
+
+    <select id="findAllAgreeEnglishWords" resultType="com.pc.rbac_system.model.EnglishWord">
+        select * from wx_words left join wx_user_words_agree_relation on wx_words.id = wx_user_words_agree_relation.word_id where  wx_user_words_agree_relation.user_id = #{userId}
+    </select>
+</mapper>

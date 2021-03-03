@@ -64,7 +64,8 @@ public class StudentServiceImpl implements IStudentService {
     @Transactional
     public Result changeStudentTeam(Long stuId, Long teamId) {
         Team oldTeam = teamMapper.findTeamById(studentMapper.findStudentById(stuId).getTeamId());
-        if (oldTeam == null || oldTeam.getId() == null || oldTeam.getId() == 0){
+        if (oldTeam == null){
+            oldTeam = new Team();
             oldTeam.setTeamName("无");
         }
         studentMapper.changeStudentTeam(stuId,teamId);

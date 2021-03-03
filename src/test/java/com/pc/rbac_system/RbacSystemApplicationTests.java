@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.util.*;
@@ -82,6 +83,7 @@ class RbacSystemApplicationTests {
 //        ExportWord exportWord = new ExportWord();
 //        exportWord.createWord(exportWord.getData());
     }
+
 
 
     @Test

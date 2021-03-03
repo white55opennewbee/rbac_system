@@ -12,4 +12,26 @@
     <select id="findAllSignStatus" resultType="com.pc.rbac_system.model.SignStatus">
         select * from wx_sign_status
     </select>
+
+    <select id="findSignsRecordByPage" resultType="com.pc.rbac_system.model.Sign">
+        select * from wx_sign where status = 1
+        <if test="signSearchParam.studentName != null and signSearchParam.studentName !=''">
+           and student_name like concat('%',#{signSearchParam.studentName},'%')
+        </if>
+        <if test="signSearchParam.startTime != null and signSearchParam.startTime != ''">
+           and create_time &gt; #{signSearchParam.startTime}
+        </if>
+        <if test="signSearchParam.endTime != null and signSearchParam.endTime != ''">
+           and create_time &lt; #{signSearchParam.endTime}}
+        </if>
+        and student_id in (
+                select id from wx_student where team_id in (
+                        select team_id from wx_teacher_team_relation where teacher_id = #{teacherId}
+                    )
+                )
+    </select>
+
+    <update id="changeStudentSignType">
+        update wx_sign set sign_in = #{signTypeId} where id = #{signId}
+    </update>
 </mapper>
