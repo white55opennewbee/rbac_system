@@ -36,7 +36,7 @@ public class WordHtmlGeneratorHelper {
         for (char item : c) {
             String itemascii = "";
 //            if (item >= 19968 && item < 40623) {
-            if (item >= 19968 && item <= 40857) {
+            if (item >= 19968 && item < 40858) {
                 itemascii = itemascii = "&#" + (item & 0xffff) + ";";
             } else {
                 itemascii = item + "";
