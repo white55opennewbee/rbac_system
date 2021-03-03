@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+
 import org.apache.commons.codec.binary.Base64;
 import sun.misc.BASE64Encoder;
 
@@ -20,7 +21,7 @@ import sun.misc.BASE64Encoder;
  * @Description: 文档图片转换器
  * @create 21.2.25 17:46
  */
-public class WordImageConvertor {
+public class WordImageConvector {
 
     //private static Const WORD_IMAGE_SHAPE_TYPE_ID="";
 
@@ -106,17 +107,17 @@ public class WordImageConvertor {
         StringBuilder sb1 = new StringBuilder();
 
         sb1.append(" <!--[if gte vml 1]>");
-        sb1.append("<v:shape id=3D\"" + shapeid + "\"");
+        sb1.append("<v:shape id=3D\"").append(shapeid).append("\"");
         sb1.append("\n");
-        sb1.append(" o:spid=3D\"" + spid + "\"");
-        sb1.append(" type=3D\"" + typeid + "\" alt=3D\"" + imageFielShortName + "\"");
+        sb1.append(" o:spid=3D\"").append(spid).append("\"");
+        sb1.append(" type=3D\"").append(typeid).append("\" alt=3D\"").append(imageFielShortName).append("\"");
         sb1.append("\n");
-        sb1.append(" style=3D' " + generateImageBodyBlockStyleAttr(imageFilePath, imageHeight, imageWidth) + imageStyle + "'");
+        sb1.append(" style=3D' ").append(generateImageBodyBlockStyleAttr(imageFilePath, imageHeight, imageWidth)).append(imageStyle).append("'");
         sb1.append(">");
         sb1.append("\n");
-        sb1.append(" <v:imagedata src=3D\"" + srcLocationShortName + "\"");
+        sb1.append(" <v:imagedata src=3D\"").append(srcLocationShortName).append("\"");
         sb1.append("\n");
-        sb1.append(" o:title=3D\"" + imageFielShortName.split("\\.")[0] + "\"");
+        sb1.append(" o:title=3D\"").append(imageFielShortName.split("\\.")[0]).append("\"");
         sb1.append("/>");
         sb1.append("</v:shape>");
         sb1.append("<![endif]-->");
@@ -136,14 +137,12 @@ public class WordImageConvertor {
     }
 
     /**
-     * @param @param  nextPartId
-     * @param @param  contextLoacation
-     * @param @param  ContentType
-     * @param @param  base64Content
-     * @param @return
+     * @param nextPartId
+     * @param contextLoacation
+     * @param fileTypeName
+     * @param base64Content
      * @return String
-     * @throws
-     * @Description: 生成图片的base4块
+     * @Description: 生成图片的base64块
      */
     public static String generateImageBase64Block(String nextPartId, String contextLoacation,
                                                   String fileTypeName, String base64Content) {
@@ -158,13 +157,13 @@ public class WordImageConvertor {
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append("\n");
-        sb.append("------=_NextPart_" + nextPartId);
+        sb.append("------=_NextPart_").append(nextPartId);
         sb.append("\n");
-        sb.append("Content-Location: " + contextLoacation);
+        sb.append("Content-Location: ").append(contextLoacation);
         sb.append("\n");
         sb.append("Content-Transfer-Encoding: base64");
         sb.append("\n");
-        sb.append("Content-Type: " + getImageContentType(fileTypeName));
+        sb.append("Content-Type: ").append(getImageContentType(fileTypeName));
         sb.append("\n");
         sb.append("\n");
         sb.append(base64Content);
@@ -186,8 +185,6 @@ public class WordImageConvertor {
                 width = sourceImg.getWidth();
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,8 +196,8 @@ public class WordImageConvertor {
         BigDecimal widthValue = new BigDecimal(width * 12 / 16);
         widthValue = widthValue.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-        sb.append("height:" + heightValue + "pt;");
-        sb.append("width:" + widthValue + "pt;");
+        sb.append("height:").append(heightValue).append("pt;");
+        sb.append("width:").append(widthValue).append("pt;");
         sb.append("visibility:visible;");
         sb.append("mso-wrap-style:square; ");
 
@@ -211,43 +208,42 @@ public class WordImageConvertor {
     private static String getImageContentType(String fileTypeName) {
         String result = "image/jpeg";
         //http://tools.jb51.net/table/http_content_type
-        if (fileTypeName.equals("tif") || fileTypeName.equals("tiff")) {
-            result = "image/tiff";
-        } else if (fileTypeName.equals("fax")) {
-            result = "image/fax";
-        } else if (fileTypeName.equals("gif")) {
-            result = "image/gif";
-        } else if (fileTypeName.equals("ico")) {
-            result = "image/x-icon";
-        } else if (fileTypeName.equals("jfif") || fileTypeName.equals("jpe")
-                || fileTypeName.equals("jpeg") || fileTypeName.equals("jpg")) {
-            result = "image/jpeg";
-        } else if (fileTypeName.equals("net")) {
-            result = "image/pnetvue";
-        } else if (fileTypeName.equals("png") || fileTypeName.equals("bmp")) {
-            result = "image/png";
-        } else if (fileTypeName.equals("rp")) {
-            result = "image/vnd.rn-realpix";
-        } else if (fileTypeName.equals("rp")) {
-            result = "image/vnd.rn-realpix";
+        switch (fileTypeName) {
+            case "tif":
+            case "tiff":
+                result = "image/tiff";
+                break;
+            case "fax":
+                result = "image/fax";
+                break;
+            case "gif":
+                result = "image/gif";
+                break;
+            case "ico":
+                result = "image/x-icon";
+                break;
+            case "jfif":
+            case "jpe":
+            case "jpeg":
+            case "jpg":
+                result = "image/jpeg";
+                break;
+            case "net":
+                result = "image/pnetvue";
+                break;
+            case "png":
+            case "bmp":
+                result = "image/png";
+                break;
+            case "rp":
+                result = "image/vnd.rn-realpix";
+                break;
+            default:
+                result = "image/jpeg";
+                ;
         }
 
         return result;
-    }
-
-
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-		/*String picture="F:\\725017921264249223.jpg";
-		BufferedImage sourceImg =ImageIO.read(new FileInputStream(picture));
-		int height=sourceImg.getHeight();
-		int width=sourceImg.getWidth();
-		System.out.println(height +" And pt=" +height*12/16);
-		System.out.println(width+" And pt=" +width*12/16);*/
-
-        String picture = "F:\\725017921264249223.jpg";
-        imageToBase64(picture);
-
-
     }
 
 

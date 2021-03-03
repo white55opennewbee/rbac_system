@@ -1347,7 +1347,7 @@ text .5pt;
   padding:0cm 5.4pt 0cm 5.4pt;height:446.45pt'>
   <p class=3DMsoNormal align=3Dcenter style=3D'text-align:center'><span cla=
 ss=3DSpellE><span
-  lang=3DEN-US>${dailybody}</span></span></p>
+  lang=3DEN-US>${dailyBody}</span></span></p>
   </td>
   <td width=3D525 valign=3Dtop style=3D'width:393.75pt;border-top:none;bord=
 er-left:
@@ -1393,9 +1393,9 @@ g=3DEN-US
 
 <p class=3DMsoNormal align=3Dright style=3D'text-align:right'><span class=
 =3DSpellE><span
-lang=3DEN-US style=3D'color:white;mso-color-alt:windowtext'>${studentName}</sp=
+lang=3DEN-US style=3D'color:white;mso-color-alt:windowtext'></sp=
 an></span><span
-lang=3DEN-US><span class=3DSpellE>:${studentNameValue}</span></span></p>
+lang=3DEN-US><span class=3DSpellE>${studentName}:${studentNameValue}</span></span></p>
 
 <p class=3DMsoNormal align=3Dright style=3D'text-align:right'><span class=
 =3DSpellE><span
@@ -1487,6 +1487,7 @@ ccent6=3D"accent6" hlink=3D"hlink" folHlink=3D"folHlink"/>
 
 ${imagesBase64String}
 
+
 ------=_NextPart_01D70C21.BAE36DC0
 Content-Location: file:///C:/1FBBA210/dailyTemp.files/filelist.xml
 Content-Transfer-Encoding: quoted-printable
@@ -1497,7 +1498,6 @@ Content-Type: text/xml; charset="utf-8"
  <o:File HRef=3D"themedata.thmx"/>
  <o:File HRef=3D"colorschememapping.xml"/>
 ${imagesXmlHrefString}
-
  <o:File HRef=3D"filelist.xml"/>
 </xml>
 ------=_NextPart_01D70C21.BAE36DC0--
